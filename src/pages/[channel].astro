@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LinkCard from '../components/LinkCard.vue';
+import Button from "../components/BaseButton.vue";
+import InputSearch from "../components/InputSearch.vue";
+import Link from "../components/BaseAnchor.vue"
+
+import { getSavedChannels, getSavedLives } from '../utils';
+
+export function getStaticPaths() {
+  const channels = getSavedChannels();
+  return channels.map(item => {
+    return {
+      params: {
+        channel: item.slug
+      },
+      props: {
+        name: item.name,
+        url: item.link
+      }
+    }
+  })
+}
+
+const {channel} = Astro.params
+const {name, url} = Astro.props
+const liveData = getSavedLives(channel)
+
+---
+<Layout title={`Youtube Livechat - ${name}`}>
+	<main class="py-6 px-4 sm:p-6 md:py-10 md:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 align-middle items-center">
+      <Link href={url} class="w-fit" target="_blank" rel="noopener noreferrer">
+        <span class="dark:text-white text-xl font-bold">{name}</span>
+      </Link>
+      <InputSearch class="py-4 w-full" placeholder="Cari Livestream" aria-label="Cari Livestream" />
+    </div>
+		<ul role="list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+			{liveData.map(({url, title, thumbnail}) => (
+				<LinkCard url={url} thumbnail={thumbnail} title={title} description="Download livechat data berupa .json">
+          <div class="flex gap-4 mt-auto p-3 justify-end">
+            <Button>Lihat Data</Button>
+          </div>
+        </LinkCard>
+			))}
+		</ul>
+	</main>
+</Layout>
+
+<style>
+	.link-card-grid {
+		display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+	}
+</style>

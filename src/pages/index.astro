@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LinkCard from '../components/LinkCard.vue';
+import Button from '../components/BaseButton.vue';
+import { getSavedChannels } from '../utils';
+
+const channels = getSavedChannels();
+---
+<Layout title="Youtube Livechat Dataset">
+	<main class="py-6 px-4 sm:p-6 sm:px-12 md:py-10 md:px-8">
+		<ul role="list" class="flex flex-col md:flex-row gap-8 align-middle items-center justify-center">
+			{channels.map(val => (
+				<LinkCard url={val.link} thumbnail={val.thumbnail} title={val.name} class="max-w-md">
+          <div class="flex gap-4 mt-auto p-3 justify-end">
+						<a href={val.slug}>
+							<Button href="">Lihat Data</Button>
+						</a>
+          </div>
+        </LinkCard>
+			))}
+		</ul>
+	</main>
+</Layout>
+
+<style>
+</style>
